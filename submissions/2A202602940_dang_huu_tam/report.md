@@ -58,12 +58,12 @@ Nhận xét EDA:
 | # | Kiểm tra | Kết quả |
 |---|---|---|
 | 1 | Cố định seed (random, numpy, torch, worker DataLoader) | Seed 0 chạy lại: cùng thứ tự file, cùng ảnh sau augmentation, cùng khởi tạo head; seed 1 thì khác |
-| 2 | Loss CE ban đầu ≈ −ln(1/9) = 2,197 | 2,190 (batch ngẫu nhiên, `model.py`) và 2,226 (batch val thật, resnet50) |
+| 2 | Loss CE ban đầu ≈ −ln(1/9) = 2,197 | 2,190 và 2,198 (hai phiên, batch ngẫu nhiên, `model.py`); 2,226 (batch val thật, resnet50) |
 | 3 | Overfit batch nhỏ (18 ảnh, 2 ảnh/lớp, 100 bước) | Loss 2,179 → 0,0020; accuracy ở eval mode 1,00 |
 | 4 | Ảnh sau augmentation (đã giải chuẩn hoá) khớp nhãn | Nhãn của 16 ảnh khớp CSV; ảnh xem tại `eval_out/check_augmentation.png` (kèm CutMix) |
 | 5 | `model.train()` / `model.eval()` đúng lúc | Sau `evaluate()` mọi module ở eval; 2 lần forward ở eval giống nhau, ở train (dropout 0,5) khác nhau |
 
-Kiểm tra cài đặt: focal loss γ=0 bằng CE, label smoothing ε=0 bằng CE (sai số < 1e-6); đóng băng backbone chỉ còn `fc.weight`, `fc.bias` được train và 0 lớp BN ở train mode; trọng số lớp chỉ tính từ train. Chạy thử `run(Config(...))` 1 epoch từ đầu đến cuối ra đủ `history.csv`, `best.pt`, file dự đoán val đúng định dạng `eval.py`, ảnh đường cong. Bộ test của repo: **38 test, OK**.
+Kiểm tra cài đặt: focal loss γ=0 bằng CE, label smoothing ε=0 bằng CE (sai số < 1e-6); CutMix qua 50 lần thử: `lam` luôn bằng đúng diện tích ảnh gốc còn lại (kể cả khi hộp bị cắt ở biên), vùng dán lấy từ đúng ảnh `y_b`; Mixup và `mixed_loss = lam·CE(y_a) + (1−lam)·CE(y_b)` đúng; đóng băng backbone chỉ còn `fc.weight`, `fc.bias` được train và 0 lớp BN ở train mode; trọng số lớp chỉ tính từ train. Chạy thử `run(Config(...))` 1 epoch từ đầu đến cuối ra đủ `history.csv`, `best.pt`, file dự đoán val đúng định dạng `eval.py`, ảnh đường cong. Bộ test của repo: **38 test, OK**.
 
 ### 2.2 Chỉ số
 
@@ -96,31 +96,34 @@ Val dùng cho mọi lựa chọn (backbone, siêu tham số, checkpoint, phươn
 
 ### 2.5 Ngân sách GPU và các cắt giảm
 
-Thời gian 1 epoch (train + val, công thức nền, batch 64, AMP, 224) đo trên T4 bằng `train.measure_epoch_time` (có `cuda.synchronize`), lưu ở `eval_out/epoch_timing.csv`:
+Thời gian 1 epoch (train + val, công thức nền, batch 64, AMP, 224) đo trên T4 bằng `train.measure_epoch_time` (có `cuda.synchronize`, đo đủ 1 epoch, không ngoại suy). Đo **hai lần ở hai phiên Colab khác nhau**; lần 2 là số trong `eval_out/epoch_timing.csv`:
 
-| Backbone (tag timm) | Params (M) | GMAC | Train/epoch (s) | Val (s) | Tổng/epoch (s) | Bộ nhớ đỉnh (GB) |
-|---|---:|---:|---:|---:|---:|---:|
-| resnet50 (`a1_in1k`) | 23,53 | 4,09 | 40,9 | 9,6 | 50,5 | 6,5 |
-| resnext50_32x4d (`a1h_in1k`) | 23,00 | 4,23 | 52,2 | 9,6 | 61,9 | 4,6 |
-| convnext_tiny (`in12k_ft_in1k`) | 27,83 | 4,45 | 66,0 | 15,0 | 81,0 | 5,1 |
-| deit_small_patch16_224 (`fb_in1k`) | 21,67 | 4,24 | 41,3 | 7,2 | 48,5 | 3,1 |
-| swin_tiny_patch4_window7_224 (`ms_in1k`) | 27,53 | 4,49 | 65,5 | 9,5 | 75,0 | 5,6 |
-| efficientnet_b0 (`ra_in1k`) | 4,02 | 0,38 | 68,7 | 12,7 | 81,4 | 3,5 |
-| mobilenetv3_large_100 (`ra_in1k`) | 4,21 | 0,22 | 48,8 | 10,2 | 59,0 | 2,1 |
+| Backbone (tag timm) | Params (M) | GMAC | Train lần 1 (s) | Train lần 2 (s) | Val lần 2 (s) | Tổng/epoch lần 2 (s) | Bộ nhớ đỉnh (GB) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| resnet50 (`a1_in1k`) | 23,53 | 4,09 | 40,9 | 42,0 | 8,9 | 50,9 | 3,8 |
+| resnext50_32x4d (`a1h_in1k`) | 23,00 | 4,23 | 52,2 | 45,3 | 9,1 | 54,4 | 4,6 |
+| convnext_tiny (`in12k_ft_in1k`) | 27,83 | 4,45 | 66,0 | 55,7 | 8,2 | 63,9 | 5,1 |
+| deit_small_patch16_224 (`fb_in1k`) | 21,67 | 4,24 | 41,3 | 41,6 | 9,2 | 50,8 | 3,1 |
+| swin_tiny_patch4_window7_224 (`ms_in1k`) | 27,53 | 4,49 | 65,5 | 71,2 | 10,0 | 81,2 | 5,6 |
+| efficientnet_b0 (`ra_in1k`) | 4,02 | 0,38 | 68,7 | 41,0 | 8,1 | 49,1 | 3,5 |
+| mobilenetv3_large_100 (`ra_in1k`) | 4,21 | 0,22 | 48,8 | 36,9 | 8,7 | 45,5 | 2,1 |
 
-Params đếm khi đã thay head 9 lớp (vì vậy nhỏ hơn số của slide, vốn tính head 1000 lớp). Thời gian đo đủ 1 epoch (không ngoại suy). Đáng chú ý: **GMAC không dự đoán được thời gian**: efficientnet_b0 (0,38 GMAC) và mobilenetv3 (0,22 GMAC) train một epoch không nhanh hơn resnet50 (4,09 GMAC) trên T4, vì depthwise conv tận dụng GPU kém và ở kích thước này phần đọc/giải mã ảnh cũng chiếm đáng kể (slide trang 43: *FLOPs không phải độ trễ*).
+Params đếm khi đã thay head 9 lớp (vì vậy nhỏ hơn số của slide, vốn tính head 1000 lớp). Nhận xét:
 
-Kế hoạch số lần chạy (12 epoch/lần): 7 backbone × 1 seed (Bước 1), 12 lần ablation trên 1 backbone (Bước 2), chung kết 3 seed và mốc `T00` thêm 2 seed (Bước 4). Ước tính theo thời gian đo ở trên:
+- **Thời gian đo một lần không ổn định:** cùng backbone, hai phiên chênh tới 40% (efficientnet_b0: 68,7 s → 41,0 s), có thể do GPU Colab dùng chung, nhiệt độ/xung nhịp, hoặc lần 1 còn chịu chi phí khởi động (tải trọng số, cuDNN chọn thuật toán). Vì vậy chỉ dùng các số này để **lập ngân sách**, không để kết luận backbone nào nhanh hơn; độ trễ được đo kỹ ở Bước 3 (warmup, ≥ 50 lần, p50/p95/p99).
+- **GMAC không dự đoán được thời gian train:** efficientnet_b0 (0,38 GMAC) và mobilenetv3 (0,22 GMAC) ít hơn resnet50 (4,09 GMAC) 10–18 lần, nhưng thời gian train một epoch chỉ ngang hoặc nhanh hơn chút (41,0 s và 36,9 s so với 42,0 s ở lần 2). Lý do: depthwise conv tận dụng GPU kém, và với ảnh nhỏ thì phần đọc/giải mã/augmentation trên CPU chiếm đáng kể (slide trang 43: *FLOPs không phải độ trễ*).
+
+Kế hoạch số lần chạy (12 epoch/lần): 7 backbone × 1 seed (Bước 1), 12 lần ablation trên 1 backbone (Bước 2), chung kết 3 seed và mốc `T00` thêm 2 seed (Bước 4). Ước tính theo thời gian đo lần 2:
 
 | Hạng mục | Giờ GPU (T4) |
 |---|---:|
-| B: 7 backbone × 1 seed | 1,52 |
-| T: 12 lần ablation (1 backbone) | 2,02 |
-| F: chung kết + mốc | 0,84 |
-| **Tổng** | **4,38** |
-| Cộng 20% cho chạy hỏng | 5,26 |
+| B: 7 backbone × 1 seed | 1,32 |
+| T: 12 lần ablation (1 backbone) | 2,04 |
+| F: chung kết + mốc | 0,85 |
+| **Tổng** | **4,21** |
+| Cộng 20% cho chạy hỏng | 5,05 |
 
-Ước tính T và F tính theo thời gian của resnet50; nếu backbone đi tiếp chậm hơn, số giờ tăng tương ứng (trường hợp chậm nhất ≈ 1,6 lần). Tổng ~5 giờ GPU chia được thành vài phiên Colab; mọi lần chạy lưu checkpoint mỗi epoch ra Drive để tiếp tục khi phiên bị ngắt.
+Ước tính T và F tính theo thời gian của resnet50; nếu backbone đi tiếp chậm hơn, số giờ tăng tương ứng (chậm nhất là swin_tiny, ≈ 1,6 lần). Tổng ~5 giờ GPU chia được thành vài phiên Colab; mọi lần chạy lưu checkpoint mỗi epoch ra Drive để tiếp tục khi phiên bị ngắt.
 
 **Cắt giảm đã áp dụng** (theo thứ tự ưu tiên của GUIDE mục 7):
 
