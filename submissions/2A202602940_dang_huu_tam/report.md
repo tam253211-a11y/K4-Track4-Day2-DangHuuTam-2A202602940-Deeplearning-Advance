@@ -128,8 +128,9 @@ Kế hoạch số lần chạy (12 epoch/lần): 7 backbone × 1 seed (Bước 1
 **Cắt giảm đã áp dụng** (theo thứ tự ưu tiên của GUIDE mục 7):
 
 1. **Ablation Bước 2 chỉ trên 1 backbone** (chọn ở Bước 1 dựa trên macro-F1 val và độ trễ, xem mục 3). Hệ quả: kết luận về công thức huấn luyện chỉ chắc chắn cho backbone này, chưa kiểm chứng tính tổng quát sang backbone khác.
-2. **Ablation chạy 1 seed**; 3 seed dành cho chung kết và mốc. Hệ quả: các Δ ở Bước 2 nhỏ hơn độ lệch giữa seed (đo ở Bước 4) được ghi là "không phân biệt được".
-3. Số epoch: 12 (trong khoảng 10–15 của đề), giống nhau cho mọi cấu hình.
+2. **Bước 2 rút gọn còn 6 ablation trên 4 trục** (A: đóng băng; B: CutMix, TrivialAugment; C: label smoothing, focal; F: EMA) thay vì 12 dự kiến, do hạn mức GPU miễn phí và hạn nộp. Bỏ: train từ đầu (A), lật dọc và ColorJitter (B), CE có trọng số lớp (C), sampler cân bằng (D), cùng LR cho backbone/head (E). Hệ quả: chưa trả lời được các câu hỏi của trục D, E và câu "train từ đầu có kịp không".
+3. **Ablation chạy 1 seed**; 3 seed dành cho chung kết và mốc. Hệ quả: các Δ ở Bước 2 nhỏ hơn độ lệch giữa seed (đo ở Bước 4) được ghi là "không phân biệt được".
+4. Số epoch: 12 (trong khoảng 10–15 của đề), giống nhau cho mọi cấu hình.
 
 ---
 
