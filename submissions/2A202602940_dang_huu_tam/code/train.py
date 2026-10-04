@@ -32,6 +32,17 @@ import pandas as pd
 import torch
 from torch import nn
 
+# Nhiều worker DataLoader qua nhiều lần train liên tiếp dễ vượt giới hạn file mở (Errno 24 "Too many open files"):
+# chia sẻ tensor qua file thay vì file descriptor, và nâng giới hạn mềm lên giới hạn cứng (Linux).
+if "file_system" in torch.multiprocessing.get_all_sharing_strategies():
+    torch.multiprocessing.set_sharing_strategy("file_system")
+try:
+    import resource
+    _soft, _hard = resource.getrlimit(resource.RLIMIT_NOFILE)
+    resource.setrlimit(resource.RLIMIT_NOFILE, (max(_soft, min(_hard, 65536)), _hard))
+except (ImportError, ValueError, OSError):
+    pass
+
 import dataset as D
 import losses as L
 import model as M
@@ -326,6 +337,16 @@ def _setup(cfg: Config, device, need_test: bool = False):
     return model, loaders, train_df, {"mean": list(mean), "std": list(std)}
 
 
+def _close_loaders(loaders: dict) -> None:
+    """Tắt worker (persistent_workers) của các loader ngay khi xong một lần chạy, không chờ GC."""
+    for dl in loaders.values():
+        it = getattr(dl, "_iterator", None)
+        if it is not None and hasattr(it, "_shutdown_workers"):
+            it._shutdown_workers()
+        dl._iterator = None
+    loaders.clear()
+
+
 def run(cfg: Config) -> dict:
     """Huấn luyện một cấu hình và lưu mọi thứ cần thiết. Trả về dict tóm tắt.
 
@@ -430,6 +451,7 @@ def run(cfg: Config) -> dict:
     plot_curves(history, curve_path(cfg), f"{cfg.exp_id} | {cfg.backbone} | seed {cfg.seed}", lrs)
     (rd / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
     (rd / "last.pt").unlink(missing_ok=True)  # đã xong; best.pt đủ cho Bước 3, bớt dung lượng Drive
+    _close_loaders(loaders)
     print(f"[{cfg.exp_id} seed{cfg.seed}] best epoch {best_epoch} | val macro-F1 {val_m['macro_f1']:.4f} "
           f"| top1 {val_m['top1']:.4f}")
     return summary
@@ -445,6 +467,7 @@ def predict_test(cfg: Config) -> Path:
     model.load_state_dict(torch.load(run_dir(cfg) / "best.pt", map_location=device, weights_only=True))
     names, y_test, logits, _ = evaluate(model, loaders["test"], nn.CrossEntropyLoss(), device, cfg)
     np.save(run_dir(cfg) / "test_logits.npy", logits)
+    _close_loaders(loaders)
     return save_predictions(out, names, y_test, softmax(logits))
 
 
@@ -483,6 +506,7 @@ def measure_epoch_time(cfg: Config, max_batches: int | None = None) -> dict:
            "train_epoch_s": train_s, "val_s": val_s, "epoch_s": train_s + val_s,
            "extrapolated": max_batches is not None,
            "peak_mem_GB": torch.cuda.max_memory_allocated() / 1e9 if device.type == "cuda" else 0.0}
+    _close_loaders(loaders)
     del model, optimizer
     if device.type == "cuda":
         torch.cuda.empty_cache()
