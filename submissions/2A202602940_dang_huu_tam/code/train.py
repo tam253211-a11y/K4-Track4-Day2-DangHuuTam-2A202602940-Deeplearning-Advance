@@ -20,6 +20,7 @@ import copy
 import dataclasses
 import json
 import math
+import os
 import random
 import sys
 import time
@@ -76,7 +77,7 @@ class Config:
     ema_decay: float | None = None
     amp: bool = True
     channels_last: bool = True
-    num_workers: int = 2
+    num_workers: int = int(os.environ.get("NUM_WORKERS", 2))   # notebook đặt theo số nhân CPU (chỉ ảnh hưởng tốc độ)
     cache_images: bool = True         # nạp sẵn byte JPEG vào RAM (~490 MB) để không nghẽn đọc đĩa
     # --- đường dẫn ---
     images_dir: str = "data/images"
