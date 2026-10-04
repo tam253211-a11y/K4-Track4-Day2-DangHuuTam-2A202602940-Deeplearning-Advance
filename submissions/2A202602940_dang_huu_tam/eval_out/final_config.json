@@ -1,0 +1,19 @@
+{
+  "exp_id": "F01",
+  "backbone": "convnext_tiny",
+  "recipe_from": "T05",
+  "recipe_changes_vs_T00": {
+    "backbone": "convnext_tiny",
+    "aug": "trivial"
+  },
+  "inference": "I04_256",
+  "inference_reason": "I04_256 có macro-F1 val 0.9797, hơn I00 +0.0061 > std 0.0023",
+  "temperature_scaling": "T khớp trên VAL của từng seed",
+  "realtime_variant": "F01rt = cùng mô hình, 1 view + temperature scaling",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "chosen_on": "val only (Bước 2 + Bước 3), trước khi mở test"
+}

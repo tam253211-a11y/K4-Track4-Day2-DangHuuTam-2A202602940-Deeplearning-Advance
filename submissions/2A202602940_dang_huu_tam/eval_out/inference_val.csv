@@ -1,0 +1,18 @@
+exp_id,phương pháp,mô hình/checkpoint,K (view hoặc mô hình),tiền xử lý,macro-F1 val,top-1 val,ECE val,lat_key,ghi chú
+I00,1 view (mốc),T05,1,resize 256 + center crop 224,0.9736,0.9803,0.0101,base,
+I01,"TTA lật ngang, gộp xác suất",T05,2,center 224 + lật,0.975,0.9814,0.0081,tta2,
+I02a,"TTA 5 crop (4 góc + giữa), gộp xác suất",T05,5,"ảnh 256, 5 crop 224",0.9743,0.9806,0.0088,tta5,
+I02b,"TTA 10 crop (5 crop + lật), gộp xác suất",T05,10,"ảnh 256, 10 crop 224",0.975,0.9814,0.0064,tta10,
+I02c,"TTA 3 tỉ lệ 224/256/288, gộp xác suất",T05,3,nguyên ảnh resize 224/256/288,0.9782,0.9831,0.0085,ms3,
+I03a,"TTA lật ngang, gộp LOGIT",T05,2,center 224 + lật,0.975,0.9814,0.0081,tta2,
+I03b,"TTA 10 crop, gộp LOGIT",T05,10,"ảnh 256, 10 crop 224",0.9759,0.9823,0.0083,tta10,
+I03c,"TTA 3 tỉ lệ, gộp LOGIT",T05,3,nguyên ảnh resize 224/256/288,0.9765,0.982,0.0088,ms3,
+I04_256,độ phân giải kiểm tra 256,T05,1,resize 293 + center crop 256,0.9797,0.9846,0.0066,res256,
+I04_288,độ phân giải kiểm tra 288,T05,1,resize 329 + center crop 288,0.9743,0.9794,0.0074,res288,
+I04_320,độ phân giải kiểm tra 320,T05,1,resize 366 + center crop 320,0.972,0.9771,0.0071,res320,
+I05a,ensemble 3 seed T00 (trung bình xác suất),"T00 seed 0,1,2",3,center 224,0.9729,0.9791,0.0095,ens_T00,so với T00 seed0: macro-F1 0.9699
+I05b,ensemble 3 backbone (trung bình xác suất),T05 + B04 (deit_small) + B05 (swin_tiny),3,center 224,0.9736,0.9811,0.0126,ens_bb,
+I06,"trọng số EMA (decay 0,998)",T12,1,center 224,0.9719,0.9786,0.0079,ema,so với T00 seed0 cùng công thức không EMA: macro-F1 0.9699
+I07,temperature scaling T = 1.345 (khớp trên val),T05,1,center 224,0.9736,0.9803,0.0043,base,ECE trước 0.0101; ECE chéo 2 nửa val 0.0070
+I08b,AMP (autocast FP16),T05,1,center 224,0.9736,0.9803,0.0104,amp,
+I08c,FP16 (model.half()),T05,1,center 224,0.9736,0.9803,0.0101,fp16,

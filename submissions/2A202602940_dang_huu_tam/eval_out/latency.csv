@@ -1,0 +1,41 @@
+cấu hình,GPU,dtype,batch,K view,độ phân giải,gộp BN,p50 (ms),p95 (ms),p99 (ms),ảnh/s,tiền xử lý,torch
+T05 convnext_tiny 1 view,NVIDIA GeForce RTX 4090,fp32,1,1,224,không,3.971,4.096,4.152,251.8,không tính,2.11.0+cu128
+T05 convnext_tiny 1 view,NVIDIA GeForce RTX 4090,fp32,32,1,224,không,14.749,14.82,14.858,2169.7,không tính,2.11.0+cu128
+"T05 TTA lật (K=2, 1 batch K view)",NVIDIA GeForce RTX 4090,fp32,1,2,224,không,3.968,4.003,4.028,252.0,không tính,2.11.0+cu128
+T05 TTA 5 crop,NVIDIA GeForce RTX 4090,fp32,1,5,224,không,3.952,4.03,4.049,253.1,không tính,2.11.0+cu128
+T05 TTA 10 crop,NVIDIA GeForce RTX 4090,fp32,1,10,224,không,4.845,4.928,4.932,206.4,không tính,2.11.0+cu128
+T05 1 view @ 256,NVIDIA GeForce RTX 4090,fp32,1,1,256,không,3.926,3.957,3.977,254.7,không tính,2.11.0+cu128
+T05 1 view @ 288,NVIDIA GeForce RTX 4090,fp32,1,1,288,không,4.278,4.427,5.481,233.8,không tính,2.11.0+cu128
+T05 1 view @ 320,NVIDIA GeForce RTX 4090,fp32,1,1,320,không,3.946,3.989,4.019,253.4,không tính,2.11.0+cu128
+T05 AMP,NVIDIA GeForce RTX 4090,amp,1,1,224,không,5.457,5.742,7.094,183.2,không tính,2.11.0+cu128
+T05 AMP,NVIDIA GeForce RTX 4090,amp,32,1,224,không,6.909,6.918,7.109,4631.6,không tính,2.11.0+cu128
+T05 FP16,NVIDIA GeForce RTX 4090,fp16,1,1,224,không,3.953,4.155,4.201,253.0,không tính,2.11.0+cu128
+T05 FP16,NVIDIA GeForce RTX 4090,fp16,32,1,224,không,5.289,5.295,5.298,6049.9,không tính,2.11.0+cu128
+B03 convnext_tiny,NVIDIA GeForce RTX 4090,fp32,1,1,224,không,3.968,4.092,4.108,252.0,không tính,2.11.0+cu128
+B03 convnext_tiny,NVIDIA GeForce RTX 4090,fp32,32,1,224,không,14.644,14.706,14.729,2185.1,không tính,2.11.0+cu128
+B03 convnext_tiny,NVIDIA GeForce RTX 4090,amp,1,1,224,không,5.576,6.188,8.055,179.4,không tính,2.11.0+cu128
+B03 convnext_tiny,NVIDIA GeForce RTX 4090,amp,32,1,224,không,6.797,6.806,6.814,4708.0,không tính,2.11.0+cu128
+B04 deit_small,NVIDIA GeForce RTX 4090,fp32,1,1,224,không,3.414,3.515,3.543,292.9,không tính,2.11.0+cu128
+B04 deit_small,NVIDIA GeForce RTX 4090,fp32,32,1,224,không,11.398,11.528,11.593,2807.5,không tính,2.11.0+cu128
+B04 deit_small,NVIDIA GeForce RTX 4090,amp,1,1,224,không,4.794,4.831,4.874,208.6,không tính,2.11.0+cu128
+B04 deit_small,NVIDIA GeForce RTX 4090,amp,32,1,224,không,4.766,4.89,4.953,6714.2,không tính,2.11.0+cu128
+B05 swin_tiny,NVIDIA GeForce RTX 4090,fp32,1,1,224,không,6.879,7.079,7.148,145.4,không tính,2.11.0+cu128
+B05 swin_tiny,NVIDIA GeForce RTX 4090,fp32,32,1,224,không,19.276,19.332,19.359,1660.1,không tính,2.11.0+cu128
+B05 swin_tiny,NVIDIA GeForce RTX 4090,amp,1,1,224,không,8.731,8.85,8.927,114.5,không tính,2.11.0+cu128
+B05 swin_tiny,NVIDIA GeForce RTX 4090,amp,32,1,224,không,8.849,8.865,9.079,3616.2,không tính,2.11.0+cu128
+B01 resnet50,NVIDIA GeForce RTX 4090,fp32,1,1,224,không,4.454,4.492,4.531,224.5,không tính,2.11.0+cu128
+B01 resnet50,NVIDIA GeForce RTX 4090,fp32,32,1,224,không,11.611,11.855,11.86,2756.1,không tính,2.11.0+cu128
+B01 resnet50,NVIDIA GeForce RTX 4090,amp,1,1,224,không,5.491,5.576,5.608,182.1,không tính,2.11.0+cu128
+B01 resnet50,NVIDIA GeForce RTX 4090,amp,32,1,224,không,5.916,6.011,6.091,5408.9,không tính,2.11.0+cu128
+B06 efficientnet_b0,NVIDIA GeForce RTX 4090,fp32,1,1,224,không,5.803,6.004,6.093,172.3,không tính,2.11.0+cu128
+B06 efficientnet_b0,NVIDIA GeForce RTX 4090,fp32,32,1,224,không,5.887,6.011,6.087,5435.5,không tính,2.11.0+cu128
+B06 efficientnet_b0,NVIDIA GeForce RTX 4090,amp,1,1,224,không,7.34,7.486,7.533,136.2,không tính,2.11.0+cu128
+B06 efficientnet_b0,NVIDIA GeForce RTX 4090,amp,32,1,224,không,7.506,7.576,7.622,4263.4,không tính,2.11.0+cu128
+B02 resnext50,NVIDIA GeForce RTX 4090,fp32,1,1,224,không,4.485,4.564,4.591,223.0,không tính,2.11.0+cu128
+B02 resnext50,NVIDIA GeForce RTX 4090,fp32,32,1,224,không,14.406,14.43,14.434,2221.3,không tính,2.11.0+cu128
+B02 resnext50,NVIDIA GeForce RTX 4090,amp,1,1,224,không,5.329,5.376,5.385,187.7,không tính,2.11.0+cu128
+B02 resnext50,NVIDIA GeForce RTX 4090,amp,32,1,224,không,6.855,7.086,7.092,4668.2,không tính,2.11.0+cu128
+B07 mobilenetv3,NVIDIA GeForce RTX 4090,fp32,1,1,224,không,4.983,5.756,6.649,200.7,không tính,2.11.0+cu128
+B07 mobilenetv3,NVIDIA GeForce RTX 4090,fp32,32,1,224,không,4.767,4.832,4.921,6712.9,không tính,2.11.0+cu128
+B07 mobilenetv3,NVIDIA GeForce RTX 4090,amp,1,1,224,không,5.896,5.934,5.959,169.6,không tính,2.11.0+cu128
+B07 mobilenetv3,NVIDIA GeForce RTX 4090,amp,32,1,224,không,5.97,6.013,6.032,5360.4,không tính,2.11.0+cu128

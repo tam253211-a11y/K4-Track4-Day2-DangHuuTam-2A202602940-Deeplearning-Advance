@@ -1,0 +1,8 @@
+exp_id,backbone,tag trọng số,#tham số (M),GMAC,độ phân giải,epoch,seed,macro-F1 val,top-1 val,F1 Chinee apple val,F1 Snake weed val,F1 val epoch 1,epoch đầu đạt 98% F1 tốt nhất,best epoch,val loss min @epoch,train loss cuối,val loss cuối,thời gian train/epoch (s),độ trễ batch-1 p50 (ms),độ trễ batch-1 p95 (ms),ghi chú
+B01,resnet50,resnet50.a1_in1k,23.53,4.09,224,12,0,0.7933,0.8509,0.6199,0.6935,0.2101,7,11,11,0.3815,0.4403,7.2,4.51,4.56,"1 seed; FP32, NVIDIA GeForce RTX 4090, không tính tiền xử lý"
+B02,resnext50,resnext50_32x4d.a1h_in1k,23.0,4.23,224,12,0,0.7635,0.8163,0.7379,0.745,0.1886,9,11,11,0.2168,0.5285,8.3,4.44,4.5,"1 seed; FP32, NVIDIA GeForce RTX 4090, không tính tiền xử lý"
+B03,convnext_tiny,convnext_tiny.in12k_ft_in1k,27.83,4.45,224,12,0,0.9699,0.9763,0.9519,0.9279,0.8441,6,10,12,0.0357,0.0985,8.6,4.0,4.09,"1 seed; FP32, NVIDIA GeForce RTX 4090, không tính tiền xử lý"
+B04,deit_small,deit_small_patch16_224.fb_in1k,21.67,4.6,224,12,0,0.9546,0.9663,0.9023,0.8862,0.8383,8,11,12,0.0468,0.1117,6.6,3.43,3.46,"1 seed; FP32, NVIDIA GeForce RTX 4090, không tính tiền xử lý"
+B05,swin_tiny,swin_tiny_patch4_window7_224.ms_in1k,27.53,4.49,224,12,0,0.9541,0.9669,0.9112,0.9073,0.7842,7,12,12,0.0589,0.1304,11.2,6.92,7.12,"1 seed; FP32, NVIDIA GeForce RTX 4090, không tính tiền xử lý"
+B06,efficientnet_b0,efficientnet_b0.ra_in1k,4.02,0.38,224,12,0,0.772,0.8323,0.6883,0.7174,0.386,11,12,12,0.2269,0.5282,8.3,5.87,6.19,"1 seed; FP32, NVIDIA GeForce RTX 4090, không tính tiền xử lý"
+B07,mobilenetv3,mobilenetv3_large_100.ra_in1k,4.21,0.22,224,12,0,0.6887,0.7644,0.6931,0.6946,0.3653,6,6,6,0.2218,0.694,6.6,4.61,4.71,"1 seed; FP32, NVIDIA GeForce RTX 4090, không tính tiền xử lý"

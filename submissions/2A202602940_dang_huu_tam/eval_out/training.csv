@@ -1,0 +1,12 @@
+exp_id,backbone,trục,khác T00 ở điểm nào,seed,macro-F1 val,top-1 val,Δ macro-F1 so với T00,Δ / std,Δ so với mean T00 (3 seed),kết luận (so với nhiễu),Δ top-1 so với T00,F1 Chinee apple val,F1 Snake weed val,F1 Negatives val,best epoch,thời gian train/epoch (s),ảnh đường cong,ghi chú
+T00,convnext_tiny,-,công thức nền (GUIDE 1.4),0,0.9699,0.9763,,,,nền,,0.9519,0.9279,0.9841,10.0,8.6,T00_base.png,1 seed; dùng lại B03 (cùng cấu hình)
+T00,convnext_tiny,-,công thức nền (GUIDE 1.4),1,0.9663,0.974,,,,nền,,0.9495,0.9257,0.9834,12.0,8.9,T00_base_seed1.png,1 seed
+T00,convnext_tiny,-,công thức nền (GUIDE 1.4),2,0.9707,0.9777,,,,nền,,0.9476,0.9417,0.9863,11.0,8.8,T00_base_seed2.png,1 seed
+T02,convnext_tiny,A,"khởi tạo: đóng băng backbone, chỉ train head",0,0.846,0.8786,-0.1239,-53.3,-0.123,kém hơn T00 (Δ < -1 std),-0.0977,0.8155,0.7786,0.9136,12.0,4.0,T02_frozen.png,1 seed
+T07,convnext_tiny,C,"loss: CE + label smoothing eps = 0,1",0,0.9698,0.9769,-0.0001,-0.03,0.0009,không phân biệt được (|Δ| ≤ 1 std),0.0006,0.9476,0.9346,0.9854,12.0,8.7,T07_ls.png,1 seed
+T06,convnext_tiny,B,augmentation: + CutMix (alpha = 1),0,0.9695,0.9757,-0.0004,-0.17,0.0005,không phân biệt được (|Δ| ≤ 1 std),-0.0006,0.9545,0.9264,0.9834,11.0,8.7,T06_cutmix.png,1 seed
+T08,convnext_tiny,C,loss: focal gamma = 2,0,0.97,0.978,0.0001,0.04,0.001,không phân biệt được (|Δ| ≤ 1 std),0.0017,0.9361,0.9246,0.9877,12.0,8.8,T08_focal.png,1 seed
+T05,convnext_tiny,B,augmentation: + TrivialAugmentWide,0,0.9736,0.9803,0.0036,1.57,0.0046,tốt hơn T00 (Δ > 1 std),0.004,0.9474,0.9383,0.9882,11.0,9.1,T05_trivial.png,1 seed
+T12,convnext_tiny,F,"EMA trọng số, decay = 0,998 (đánh giá bằng EMA)",0,0.9719,0.9786,0.002,0.84,0.0029,không phân biệt được (|Δ| ≤ 1 std),0.0023,0.9571,0.9301,0.9868,10.0,9.1,T12_ema.png,1 seed
+T13,convnext_tiny,kết hợp,"kết hợp T05 (augmentation: + TrivialAugmentWide) + T12 (EMA trọng số, decay = 0,998 (đánh giá bằng EMA))",0,0.9726,0.9797,0.0027,1.15,0.0036,tốt hơn T00 (Δ > 1 std),0.0034,0.9524,0.9261,0.9882,12.0,9.9,T13_combo.png,1 seed
+T00 (3 seed),convnext_tiny,-,nhiễu do seed,"0,1,2",0.9690 ± 0.0023,0.9760 ± 0.0019,,,,,,,,,,,,mean ± std (ddof=1); std này là ngưỡng nhiễu cho mọi Δ

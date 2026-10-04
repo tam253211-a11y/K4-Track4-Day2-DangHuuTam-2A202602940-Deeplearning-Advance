@@ -1,0 +1,17 @@
+exp_id,cấu hình,seed,macro-F1 val,macro-F1 test,top-1 test,balanced acc test,ECE test,recall Chinee apple test,recall Snake weed test
+F01,convnext_tiny + công thức T05 + I04_256 + temperature scaling,0,0.9797,0.9792,0.9823,0.9745,0.0042,0.9558,0.9608
+F01,convnext_tiny + công thức T05 + I04_256 + temperature scaling,1,0.9765,0.9764,0.9818,0.9737,0.0079,0.9602,0.9363
+F01,convnext_tiny + công thức T05 + I04_256 + temperature scaling,2,0.9787,0.9765,0.982,0.9763,0.0029,0.9558,0.9804
+F01 (mean ± std),convnext_tiny + công thức T05 + I04_256 + temperature scaling,"0,1,2",0.9783 ± 0.0016,0.9774 ± 0.0016,0.9820 ± 0.0003,0.9748 ± 0.0013,0.0050 ± 0.0026,0.9572 ± 0.0026,0.9592 ± 0.0221
+F01uncal,"như F01, chưa temperature scaling",0,0.9797,0.9792,0.9823,0.9745,0.0061,0.9558,0.9608
+F01uncal,"như F01, chưa temperature scaling",1,0.9765,0.9764,0.9818,0.9737,0.0078,0.9602,0.9363
+F01uncal,"như F01, chưa temperature scaling",2,0.9787,0.9765,0.982,0.9763,0.0071,0.9558,0.9804
+F01uncal (mean ± std),"như F01, chưa temperature scaling","0,1,2",0.9783 ± 0.0016,0.9774 ± 0.0016,0.9820 ± 0.0003,0.9748 ± 0.0013,0.0070 ± 0.0009,0.9572 ± 0.0026,0.9592 ± 0.0221
+F01rt,convnext_tiny + công thức T05 + 1 view + temperature scaling (thời gian thực),0,0.9736,0.9734,0.9783,0.9697,0.004,0.9248,0.951
+F01rt,convnext_tiny + công thức T05 + 1 view + temperature scaling (thời gian thực),1,0.9734,0.9738,0.9798,0.9734,0.0047,0.9469,0.9461
+F01rt,convnext_tiny + công thức T05 + 1 view + temperature scaling (thời gian thực),2,0.9763,0.9715,0.978,0.9737,0.0053,0.9336,0.9755
+F01rt (mean ± std),convnext_tiny + công thức T05 + 1 view + temperature scaling (thời gian thực),"0,1,2",0.9744 ± 0.0016,0.9729 ± 0.0013,0.9787 ± 0.0009,0.9722 ± 0.0022,0.0046 ± 0.0007,0.9351 ± 0.0111,0.9575 ± 0.0158
+T00,mốc: convnext_tiny + công thức nền T00 + 1 view (I00),0,0.9699,0.9688,0.9746,0.971,0.0108,0.9292,0.9608
+T00,mốc: convnext_tiny + công thức nền T00 + 1 view (I00),1,0.9663,0.9718,0.9778,0.9778,0.0092,0.9469,0.9755
+T00,mốc: convnext_tiny + công thức nền T00 + 1 view (I00),2,0.9707,0.9744,0.9803,0.9755,0.01,0.9469,0.9755
+T00 (mean ± std),mốc: convnext_tiny + công thức nền T00 + 1 view (I00),"0,1,2",0.9690 ± 0.0023,0.9717 ± 0.0028,0.9776 ± 0.0029,0.9748 ± 0.0034,0.0100 ± 0.0008,0.9410 ± 0.0102,0.9706 ± 0.0085
