@@ -137,7 +137,10 @@ def count_gmacs(model, img_size: int = 224) -> float:
     Công cụ: torch.utils.flop_counter.FlopCounterMode (có sẵn trong PyTorch, không cần cài thêm).
     Nó đếm FLOPs của conv/matmul/attention (= 2 x MAC) nên chia 2; các phép từng phần tử
     (activation, norm, cộng residual) không được đếm, giống quy ước của fvcore/bảng timm.
+    Ép attention chạy backend MATH (matmul tường minh): kernel attention gộp trên CPU không được
+    FlopCounterMode đếm, làm GMAC của ViT/DeiT phụ thuộc thiết bị (deit_small: 4,24 trên CPU, 4,60 trên GPU).
     """
+    from torch.nn.attention import SDPBackend, sdpa_kernel
     from torch.utils.flop_counter import FlopCounterMode
 
     was_training = model.training
@@ -145,7 +148,7 @@ def count_gmacs(model, img_size: int = 224) -> float:
     device = next(model.parameters()).device
     x = torch.zeros(1, 3, img_size, img_size, device=device)
     counter = FlopCounterMode(display=False)
-    with counter:
+    with counter, sdpa_kernel(SDPBackend.MATH):
         model(x)
     model.train(was_training)
     if was_training:
